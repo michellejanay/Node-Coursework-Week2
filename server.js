@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 
 const app = express()
-
+app.use(express.json())
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 
@@ -37,7 +37,8 @@ app.get(`/messages/:id`, (request, response) => {
 
 app.post('/messages', (request, response) => {
   const newMessage = request.body
-  console.log(request.body)
+  console.log(newMessage)
+
   newMessage.id = messages.length + 1
   messages.push(newMessage)
   response.json(messages)
@@ -56,4 +57,7 @@ app.delete(`/messages/:id`, (request, response) => {
 })
 
 //app.listen(3000)
-app.listen(process.env.PORT)
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(PORT)
+})
