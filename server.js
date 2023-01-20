@@ -27,17 +27,20 @@ app.get('/messages', (request, response) => {
 })
 
 app.get(`/messages/:id`, (request, response) => {
-  let req = request.params.id
-  let validator =
-    messages.find((id) => messages[id] === req)(validator === undefined) &&
-    response.status(404).send('Not Found')
+  let id = parseInt(request.params.id)
+  let found = messages.some((message) => message.id === id)
 
-  response.json(validator)
+  if (found) {
+    response.json(messages.filter((message) => message.id === id))
+  } else {
+    response
+      .status(400)
+      .json({ msg: `Message id ${request.params.id} not found` })
+  }
 })
 
 app.post('/messages', (request, response) => {
   const newMessage = request.body
-  console.log(newMessage)
 
   newMessage.id = messages.length + 1
   messages.push(newMessage)
@@ -45,18 +48,16 @@ app.post('/messages', (request, response) => {
 })
 
 app.delete(`/messages/:id`, (request, response) => {
-  console.log(response)
-  const req = request.params.id
-  let validator =
-    messages.find((id) => messages[id] === req)(validator === undefined) &&
-    response.status(404).send('Not Found')
+  const id = Number(request.params.id)
+  let validator = messages.find((message) => message.id === id)
 
-  const msgIndex = messages.findIndex((ind) => ind === messages.req)
+  validator === undefined && response.status(404).send('Not Found')
+
+  const msgIndex = messages.findIndex((ind) => ind === messages.id)
   messages.splice(msgIndex, 1)
   response.send('Message deleted')
 })
 
-//app.listen(3000)
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(PORT)
